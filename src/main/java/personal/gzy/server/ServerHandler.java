@@ -1,15 +1,15 @@
 package personal.gzy.server;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import personal.gzy.protocol.command.Packet;
 import personal.gzy.protocol.command.PacketCodeC;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
+import personal.gzy.protocol.command.request.MessageRequestPacket;
 import personal.gzy.protocol.command.response.LoginResponsePacket;
+import personal.gzy.protocol.command.response.MessageResponsePacket;
 
-import java.nio.charset.Charset;
 import java.util.Date;
 
 /**
@@ -40,15 +40,16 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 response.setSuccess(false);
                 response.setReason("用户名或密码错误...");
             }
-            byteBuf = PacketCodeC.INSTANCE.encode(response);
+//            byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(),response);
             ctx.channel().writeAndFlush(byteBuf);
+        }else if(packet instanceof MessageRequestPacket){
+            MessageRequestPacket msgReq = (MessageRequestPacket)packet;
+            System.out.println(new Date()+"  收到来自客户端的消息："+msgReq.getMessage());
+            MessageResponsePacket msgResp = new MessageResponsePacket();
+            msgResp.setMessage("服务端回复【"+ msgReq.getMessage() +"】");
+//            ByteBuf out = PacketCodeC.INSTANCE.encode(ctx.alloc(),msgResp);
+//            ctx.channel().writeAndFlush(out);
         }
     }
 
-    private ByteBuf getByteBuf(ChannelHandlerContext ctx) {
-        byte[] bytes = "你好，我是nettyServer".getBytes();
-        ByteBuf out = ctx.alloc().buffer();
-        out.writeBytes(bytes);
-        return out;
-    }
 }

@@ -1,8 +1,10 @@
 package personal.gzy.protocol.command;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
+import personal.gzy.protocol.command.request.MessageRequestPacket;
+import personal.gzy.protocol.command.response.LoginResponsePacket;
+import personal.gzy.protocol.command.response.MessageResponsePacket;
 import personal.gzy.serialize.Serializer;
 import personal.gzy.serialize.impl.JSONSerializer;
 
@@ -15,10 +17,10 @@ import java.util.Map;
  * @Author GZY
  * @Date 2019/2/21 15:23
  * @Version 协议格式：
- * ------------------ --------- ---------- ------- ------------------ ------------------------------------
- * 魔术(0x12345678)    version  序列化算法   指令       数据长度                   数据
- * ------------------ --------- ---------- ------- ------------------ ------------------------------------
- * 4BYTE          1BYTE     1BYTE      1BYTE        4BYTE                       N字节
+ * ------------------ ---------   ----------    -------    ------------------   ------------------------------------
+ * 魔术(0x12345678)    version    序列化算法      指令          数据长度                     数据
+ * ------------------ ---------   ----------    -------    ------------------   ------------------------------------
+ * 4BYTE                 1BYTE     1BYTE         1BYTE           4BYTE                       N字节
  **/
 public class PacketCodeC {
     public static final PacketCodeC INSTANCE = new PacketCodeC();
@@ -29,21 +31,24 @@ public class PacketCodeC {
     static {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST, LoginRequestPacket.class);
+        packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);
     }
 
-    public ByteBuf encode(Packet packet) {
-        ByteBuf buffer = ByteBufAllocator.DEFAULT.ioBuffer();
+    public ByteBuf encode(ByteBuf byteBuf,Packet packet) {
+//        ByteBuf buffer = byteBufAllocator.ioBuffer();
         byte[] bytes = Serializer.DEFUALT.serialize(packet);
-        buffer.writeInt(MAGIC_NUMBER);
-        buffer.writeByte(packet.getVersion());
-        buffer.writeByte(Serializer.DEFUALT.getSerializerAlgorithm());
-        buffer.writeByte(packet.getCommand());
-        buffer.writeInt(bytes.length);
-        buffer.writeBytes(bytes);
-        return buffer;
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFUALT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
+        return byteBuf;
     }
 
     public Packet decode(ByteBuf byteBuf) {

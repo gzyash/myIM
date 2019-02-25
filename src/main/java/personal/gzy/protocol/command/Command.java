@@ -9,4 +9,8 @@ public interface Command {
     Byte LOGIN_REQUEST = 1;
     //服务端响应命令
     Byte LOGIN_RESPONSE = 2;
+    //客户端信息
+    Byte MESSAGE_REQUEST = 3;
+    //服务端信息
+    Byte MESSAGE_RESPONSE = 4;
 }
