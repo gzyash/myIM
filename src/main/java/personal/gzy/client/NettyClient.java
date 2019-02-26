@@ -12,7 +12,6 @@ import personal.gzy.client.handler.MessageResponseHandler;
 import personal.gzy.codec.PacketDecoder;
 import personal.gzy.codec.PacketEncoder;
 import personal.gzy.protocol.command.request.MessageRequestPacket;
-import personal.gzy.util.LoginUtil;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -83,12 +82,12 @@ public class NettyClient {
         Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
+//                if (LoginUtil.hasLogin(channel)) {
                     String outMsg = scanner.nextLine();
                     MessageRequestPacket mrp = new MessageRequestPacket();
                     mrp.setMessage(outMsg);
                     channel.writeAndFlush(mrp);
-                }
+//                }
             }
         }).start();
     }

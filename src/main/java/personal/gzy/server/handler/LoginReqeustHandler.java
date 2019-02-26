@@ -4,6 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
 import personal.gzy.protocol.command.response.LoginResponsePacket;
+import personal.gzy.util.LoginUtil;
 
 import java.util.Date;
 
@@ -20,6 +21,7 @@ public class LoginReqeustHandler extends SimpleChannelInboundHandler<LoginReques
         LoginResponsePacket lrp = new LoginResponsePacket();
         if("gzy".equals(loginRequestPacket.getUsername())&&"123456".equals(loginRequestPacket.getPassword())){
             lrp.setSuccess(true);
+            LoginUtil.makeAsLogin(channelHandlerContext.channel());
             System.out.println(new Date()+" 客户端登陆成功...");
         }else{
             lrp.setSuccess(false);

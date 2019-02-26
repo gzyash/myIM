@@ -8,6 +8,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import personal.gzy.codec.PacketDecoder;
 import personal.gzy.codec.PacketEncoder;
+import personal.gzy.server.handler.AuthHandler;
 import personal.gzy.server.handler.LoginReqeustHandler;
 import personal.gzy.server.handler.MessageRequestHandler;
 
@@ -29,27 +30,28 @@ public class NettyServer {
         serverBootstrap
                 .group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG,1024)
+                .option(ChannelOption.SO_BACKLOG, 1024)
                 .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-                             ch.pipeline().addLast(new PacketDecoder());
-                             ch.pipeline().addLast(new LoginReqeustHandler());
-                             ch.pipeline().addLast(new MessageRequestHandler());
-                             ch.pipeline().addLast(new PacketEncoder());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginReqeustHandler());
+                        ch.pipeline().addLast(new AuthHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
-        bind(serverBootstrap,PORT);
+        bind(serverBootstrap, PORT);
 
     }
 
     private static void bind(ServerBootstrap serverBootstrap, int port) {
         serverBootstrap.bind(port).addListener(future -> {
-            if(future.isSuccess()){
+            if (future.isSuccess()) {
                 System.out.println("端口[" + port + "]绑定成功!");
-            }else{
+            } else {
                 System.out.println("端口[" + port + "]绑定失败!");
             }
         });
