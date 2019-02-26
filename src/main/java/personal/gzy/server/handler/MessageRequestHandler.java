@@ -1,11 +1,12 @@
 package personal.gzy.server.handler;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import personal.gzy.protocol.command.request.MessageRequestPacket;
 import personal.gzy.protocol.command.response.MessageResponsePacket;
-
-import java.util.Date;
+import personal.gzy.session.Session;
+import personal.gzy.util.SessionUtil;
 
 /**
  * @ClassName MessageRequestHandler
@@ -18,9 +19,17 @@ public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRe
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, MessageRequestPacket messageRequestPacket) throws Exception {
-        System.out.println(new Date()+"  收到客户端信息："+messageRequestPacket.getMessage());
+        //拿到发送方的session
+        Session session = SessionUtil.getSession(channelHandlerContext.channel());
         MessageResponsePacket mrp = new MessageResponsePacket();
-        mrp.setMessage("服务端回复【"+messageRequestPacket.getMessage()+"】");
-        channelHandlerContext.channel().writeAndFlush(mrp);
+        mrp.setFromUserId(session.getUserId());
+        mrp.setFromUserName(session.getUserName());
+        mrp.setMessage(messageRequestPacket.getMessage());
+        Channel channel = SessionUtil.getChannel(messageRequestPacket.getToUserId());
+        if(channel!=null && SessionUtil.hasLogin(channel)){
+            channel.writeAndFlush(mrp);
+        }else{
+            System.out.println("当前用户[ "+messageRequestPacket.getToUserId()+" ]没在线...");
+        }
     }
 }

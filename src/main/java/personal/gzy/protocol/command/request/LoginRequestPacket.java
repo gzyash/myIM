@@ -13,7 +13,6 @@ import personal.gzy.protocol.command.Packet;
  **/
 @Data
 public class LoginRequestPacket extends Packet {
-     private String userId;
      private String username;
      private String password;
     @Override

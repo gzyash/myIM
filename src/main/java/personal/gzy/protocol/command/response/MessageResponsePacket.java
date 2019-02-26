@@ -14,6 +14,8 @@ import personal.gzy.protocol.command.Packet;
 @Data
 public class MessageResponsePacket extends Packet {
     private String message;
+    private String fromUserId;
+    private String fromUserName;
     @Override
     public Byte getCommand() {
         return Command.MESSAGE_RESPONSE;

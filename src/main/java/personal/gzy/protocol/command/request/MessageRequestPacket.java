@@ -13,7 +13,9 @@ import personal.gzy.protocol.command.Packet;
  **/
 @Data
 public class MessageRequestPacket extends Packet {
+
     private String message;
+    private String toUserId;
     @Override
     public Byte getCommand() {
         return Command.MESSAGE_REQUEST;

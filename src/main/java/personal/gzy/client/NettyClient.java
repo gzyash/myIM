@@ -11,7 +11,9 @@ import personal.gzy.client.handler.LoginResponseHandler;
 import personal.gzy.client.handler.MessageResponseHandler;
 import personal.gzy.codec.PacketDecoder;
 import personal.gzy.codec.PacketEncoder;
+import personal.gzy.protocol.command.request.LoginRequestPacket;
 import personal.gzy.protocol.command.request.MessageRequestPacket;
+import personal.gzy.util.SessionUtil;
 
 import java.util.Date;
 import java.util.Scanner;
@@ -82,13 +84,31 @@ public class NettyClient {
         Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
-//                if (LoginUtil.hasLogin(channel)) {
-                    String outMsg = scanner.nextLine();
+                if (!SessionUtil.hasLogin(channel)) {
+                    System.out.println("请输入用户名:");
+                    String userName = scanner.nextLine();
+                    LoginRequestPacket lrp = new LoginRequestPacket();
+                    lrp.setUsername(userName);
+                    lrp.setPassword("pwd");
+                    channel.writeAndFlush(lrp);
+                    waitForLoginResponse();
+                }else{
+                    String toUserId = scanner.next();
+                    String message = scanner.next();
                     MessageRequestPacket mrp = new MessageRequestPacket();
-                    mrp.setMessage(outMsg);
+                    mrp.setToUserId(toUserId);
+                    mrp.setMessage(message);
                     channel.writeAndFlush(mrp);
-//                }
+                }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
