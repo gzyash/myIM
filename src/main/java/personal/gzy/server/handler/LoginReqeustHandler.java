@@ -5,6 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
 import personal.gzy.protocol.command.response.LoginResponsePacket;
 import personal.gzy.session.Session;
+import personal.gzy.util.IdUtil;
 import personal.gzy.util.SessionUtil;
 
 import java.util.Date;
@@ -37,7 +38,7 @@ public class LoginReqeustHandler extends SimpleChannelInboundHandler<LoginReques
     }
 
     private String randomUserId() {
-        return UUID.randomUUID().toString().split("-")[0];
+        return IdUtil.createId();
     }
 
     private boolean validate(LoginRequestPacket loginRequestPacket) {

@@ -1,8 +1,12 @@
 package personal.gzy.protocol.command;
 
 import io.netty.buffer.ByteBuf;
+import personal.gzy.protocol.command.request.CreateGroupRequestPacket;
+import personal.gzy.protocol.command.request.LoginOutRequestPacket;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
 import personal.gzy.protocol.command.request.MessageRequestPacket;
+import personal.gzy.protocol.command.response.CreateGroupResponsePacket;
+import personal.gzy.protocol.command.response.LoginOutResponsePacket;
 import personal.gzy.protocol.command.response.LoginResponsePacket;
 import personal.gzy.protocol.command.response.MessageResponsePacket;
 import personal.gzy.serialize.Serializer;
@@ -34,6 +38,10 @@ public class PacketCodeC {
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(Command.LOGINOUT_REQEUST, LoginOutRequestPacket.class);
+        packetTypeMap.put(Command.LOGINOUT_RESPONSE, LoginOutResponsePacket.class);
+        packetTypeMap.put(Command.CREATEGROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(Command.CREATEGROUP_RESPONSE, CreateGroupResponsePacket.class);
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);

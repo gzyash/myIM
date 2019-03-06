@@ -7,6 +7,10 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import personal.gzy.client.console.ConsoleCommandMannager;
+import personal.gzy.client.console.LoginConsoleCommand;
+import personal.gzy.client.handler.CreateGroupResponseHandler;
+import personal.gzy.client.handler.LoginOutResponseHandler;
 import personal.gzy.client.handler.LoginResponseHandler;
 import personal.gzy.client.handler.MessageResponseHandler;
 import personal.gzy.codec.PacketDecoder;
@@ -46,6 +50,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new LoginOutResponseHandler());
+                        ch.pipeline().addLast(new CreateGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
@@ -81,34 +87,24 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        ConsoleCommandMannager consoleCommandMannager = new ConsoleCommandMannager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
         Scanner scanner = new Scanner(System.in);
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 if (!SessionUtil.hasLogin(channel)) {
-                    System.out.println("请输入用户名:");
-                    String userName = scanner.nextLine();
-                    LoginRequestPacket lrp = new LoginRequestPacket();
-                    lrp.setUsername(userName);
-                    lrp.setPassword("pwd");
-                    channel.writeAndFlush(lrp);
-                    waitForLoginResponse();
+                    loginConsoleCommand.exec(scanner,channel);
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }else{
-                    String toUserId = scanner.next();
-                    String message = scanner.next();
-                    MessageRequestPacket mrp = new MessageRequestPacket();
-                    mrp.setToUserId(toUserId);
-                    mrp.setMessage(message);
-                    channel.writeAndFlush(mrp);
+                    consoleCommandMannager.exec(scanner,channel);
                 }
             }
         }).start();
     }
 
-    private static void waitForLoginResponse() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

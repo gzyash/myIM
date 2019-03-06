@@ -13,4 +13,11 @@ public interface Command {
     Byte MESSAGE_REQUEST = 3;
     //服务端信息
     Byte MESSAGE_RESPONSE = 4;
+    //登出标识
+    Byte LOGINOUT_REQEUST = 5;
+    Byte LOGINOUT_RESPONSE = 6;
+    //创建请求群聊组标识
+    Byte CREATEGROUP_REQUEST = 6;
+    //创建响应群聊组标识
+    Byte CREATEGROUP_RESPONSE = 7;
 }

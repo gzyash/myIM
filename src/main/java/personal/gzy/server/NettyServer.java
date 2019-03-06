@@ -9,6 +9,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import personal.gzy.codec.PacketDecoder;
 import personal.gzy.codec.PacketEncoder;
 import personal.gzy.server.handler.AuthHandler;
+import personal.gzy.server.handler.CreateGroupRequestHandler;
 import personal.gzy.server.handler.LoginReqeustHandler;
 import personal.gzy.server.handler.MessageRequestHandler;
 
@@ -40,6 +41,8 @@ public class NettyServer {
                         ch.pipeline().addLast(new LoginReqeustHandler());
                         ch.pipeline().addLast(new AuthHandler());
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new LoginReqeustHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
