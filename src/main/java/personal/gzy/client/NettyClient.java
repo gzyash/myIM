@@ -9,10 +9,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import personal.gzy.client.console.ConsoleCommandMannager;
 import personal.gzy.client.console.LoginConsoleCommand;
-import personal.gzy.client.handler.CreateGroupResponseHandler;
-import personal.gzy.client.handler.LoginOutResponseHandler;
-import personal.gzy.client.handler.LoginResponseHandler;
-import personal.gzy.client.handler.MessageResponseHandler;
+import personal.gzy.client.handler.*;
 import personal.gzy.codec.PacketDecoder;
 import personal.gzy.codec.PacketEncoder;
 import personal.gzy.protocol.command.request.LoginRequestPacket;
@@ -52,6 +49,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new MessageResponseHandler());
                         ch.pipeline().addLast(new LoginOutResponseHandler());
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(new AddGroupResponseHandler());
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 });

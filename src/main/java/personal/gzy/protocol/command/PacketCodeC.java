@@ -1,14 +1,8 @@
 package personal.gzy.protocol.command;
 
 import io.netty.buffer.ByteBuf;
-import personal.gzy.protocol.command.request.CreateGroupRequestPacket;
-import personal.gzy.protocol.command.request.LoginOutRequestPacket;
-import personal.gzy.protocol.command.request.LoginRequestPacket;
-import personal.gzy.protocol.command.request.MessageRequestPacket;
-import personal.gzy.protocol.command.response.CreateGroupResponsePacket;
-import personal.gzy.protocol.command.response.LoginOutResponsePacket;
-import personal.gzy.protocol.command.response.LoginResponsePacket;
-import personal.gzy.protocol.command.response.MessageResponsePacket;
+import personal.gzy.protocol.command.request.*;
+import personal.gzy.protocol.command.response.*;
 import personal.gzy.serialize.Serializer;
 import personal.gzy.serialize.impl.JSONSerializer;
 
@@ -42,6 +36,10 @@ public class PacketCodeC {
         packetTypeMap.put(Command.LOGINOUT_RESPONSE, LoginOutResponsePacket.class);
         packetTypeMap.put(Command.CREATEGROUP_REQUEST, CreateGroupRequestPacket.class);
         packetTypeMap.put(Command.CREATEGROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(Command.ADD_GROUP_REQUEST, AddGroupRequestPacket.class);
+        packetTypeMap.put(Command.ADD_GROUP_RESPONSE, AddGroupResponsePacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(Command.QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);

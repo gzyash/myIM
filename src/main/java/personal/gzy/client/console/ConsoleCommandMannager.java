@@ -14,12 +14,15 @@ public class ConsoleCommandMannager implements ConsoleCommand {
         consoleCommandMap.put("createGroup",new CreateGroupConsoleCommand());
         consoleCommandMap.put("logOut",new LoginOutConsoleCommand());
         consoleCommandMap.put("sendToUser",new SendToUserConsoleCommand());
+        consoleCommandMap.put("addGroup", new AddGroupConsoleCommand());
+        consoleCommandMap.put("quitGroup", new QuitGroupConsoleCommand());
     }
 
     @Override
     public void exec(Scanner scanner, Channel channel) {
         String command = scanner.nextLine();
         if(!SessionUtil.hasLogin(channel)){
+            System.out.println("还未登录？请登录");
             return;
         }
         ConsoleCommand consoleCommand = consoleCommandMap.get(command);

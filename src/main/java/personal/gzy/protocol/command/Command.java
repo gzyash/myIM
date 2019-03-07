@@ -17,7 +17,13 @@ public interface Command {
     Byte LOGINOUT_REQEUST = 5;
     Byte LOGINOUT_RESPONSE = 6;
     //创建请求群聊组标识
-    Byte CREATEGROUP_REQUEST = 6;
+    Byte CREATEGROUP_REQUEST = 7;
     //创建响应群聊组标识
-    Byte CREATEGROUP_RESPONSE = 7;
+    Byte CREATEGROUP_RESPONSE = 8;
+    //加群
+    Byte ADD_GROUP_REQUEST = 9;
+    Byte ADD_GROUP_RESPONSE = 10;
+    //退群
+    Byte QUIT_GROUP_REQUEST = 11;
+    Byte QUIT_GROUP_RESPONSE = 12;
 }
